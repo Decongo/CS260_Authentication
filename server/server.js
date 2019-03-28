@@ -21,5 +21,8 @@ app.use(cookieParser());
 
 const tickets = require("./tickets.js");
 app.use("/api/tickets", tickets);
+const users = require("./users.js");
+app.use("/api/users", users);
+
 
 app.listen(3000, () => console.log('Server listening on port 3000!'));
