@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 
+var cookieParser = require("cookie-parser");
+
+
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -8,6 +11,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(express.static('../public'));
+app.use(cookieParser());
 
 const mongoose = require('mongoose');
 
@@ -15,9 +19,6 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/tickets', {
   useNewUrlParser: true
 });
-
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
 
 const tickets = require("./tickets.js");
 app.use("/api/tickets", tickets);

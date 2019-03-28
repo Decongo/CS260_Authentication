@@ -35,7 +35,21 @@ var app = new Vue({
         this.error = error.response.data.message;
       }
     },
-    async login() { },
+    async login() {
+      this.error = "";
+      try {
+        let response = await axios.post("/api/users/login", {
+          username: this.username,
+          password: this.password
+        });
+        this.user = response.data;
+        // close the dialog
+        this.toggleForm();
+      } catch (error) {
+        this.error = error.response.data.message;
+      }
+    },
+
     async logout() { },
     async getUser() { },
     async getTickets() {
