@@ -53,8 +53,6 @@ userSchema.methods.toJSON = function () {
     return obj;
 }
 
-const User = mongoose.model('User', userSchema);
-
 userSchema.methods.addToken = function (token) {
     this.tokens.push(token);
 }
@@ -66,6 +64,8 @@ userSchema.methods.removeToken = function (token) {
 userSchema.methods.removeOldTokens = function () {
     this.tokens = auth.removeOldTokens(this.tokens);
 }
+
+const User = mongoose.model('User', userSchema);
 
 // create a new user
 router.post('/', async (req, res) => {
@@ -158,6 +158,20 @@ router.delete("/", auth.verifyToken, async (req, res) => {
     await user.save();
     res.clearCookie('token');
     res.sendStatus(200);
+});
+
+// Get current user if logged in.
+router.get('/', auth.verifyToken, async (req, res) => {
+    // look up user account
+    const user = await User.findOne({
+        _id: req.user_id
+    });
+    if (!user)
+        return res.status(403).send({
+            error: "must login"
+        });
+
+    return res.send(user);
 });
 
 module.exports = router;

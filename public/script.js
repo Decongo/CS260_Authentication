@@ -12,6 +12,7 @@ var app = new Vue({
 
   },
   created() {
+    this.getUser();
     this.getTickets();
   },
   methods: {
@@ -49,9 +50,22 @@ var app = new Vue({
         this.error = error.response.data.message;
       }
     },
-
-    async logout() { },
-    async getUser() { },
+    async logout() {
+      try {
+        let response = await axios.delete("/api/users");
+        this.user = null;
+      } catch (error) {
+        // don't worry about it
+      }
+    },
+    async getUser() {
+      try {
+        let response = await axios.get("/api/users");
+        this.user = response.data;
+      } catch (error) {
+        // Not logged in. That's OK!
+      }
+    },
     async getTickets() {
       try {
         let response = await axios.get("/api/tickets");
@@ -75,11 +89,14 @@ var app = new Vue({
     },
     async deleteTicket(ticket) {
       try {
-        let response = axios.delete("/api/tickets/" + ticket._id);
+        let response = await axios.delete("/api/tickets/" + ticket._id);
         this.getTickets();
       } catch (error) {
-        console.log(error);
+        this.toggleForm();
       }
-    }
+    },
+    closeForm() {
+      this.showForm = false;
+    },
   }
 });

@@ -8,7 +8,7 @@
 </head>
 
 <body>
-  <div id="app">
+  <div id="app" @keydown.esc="closeForm">
     <div class="header">
       <h1>Ticket System</h1>
       <p v-if="user">Welcome {{user.username}}<br><a href="#" @click="logout">Logout</a></p>

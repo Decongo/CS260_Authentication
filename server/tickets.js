@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const express = require("express");
 const router = express.Router();
+const auth = require("./auth.js");
+
 
 //
 // Tickets
@@ -37,7 +39,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth.verifyToken, async (req, res) => {
   try {
     await Ticket.deleteOne({
       _id: req.params.id
